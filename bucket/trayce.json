@@ -19,6 +19,11 @@
     "post_install": [
         "$junctionPath = \"$env:LOCALAPPDATA\\unieditdept\\trayce\"",
         "$persistBackups = \"$persist_dir\\backups\"",
+        "if ((Test-Path $junctionPath) -and !((Get-Item $junctionPath -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)) {",
+        "    New-Item $persistBackups -ItemType Directory -Force | Out-Null",
+        "    Move-Item \"$junctionPath\\*\" $persistBackups -Force",
+        "    Remove-Item $junctionPath -Recurse -Force",
+        "}",
         "if (!(Test-Path $junctionPath)) {",
         "    New-Item $persistBackups -ItemType Directory -Force | Out-Null",
         "    New-Item $junctionPath -ItemType Junction -Value $persistBackups | Out-Null",
@@ -26,9 +31,9 @@
     ],
     "uninstaller": {
         "script": [
-            "$junctionPath = \"$env:LOCALAPPDATA\\unieditdept\\trayce\"",
-            "$webviewCache = \"$env:APPDATA\\unieditdept\\trayce\"",
             "if ($cmd -eq 'uninstall') {",
+            "    $junctionPath = \"$env:LOCALAPPDATA\\unieditdept\\trayce\"",
+            "    $webviewCache = \"$env:APPDATA\\unieditdept\\trayce\"",
             "    $isJunction = (Test-Path $junctionPath) -and ((Get-Item $junctionPath -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)",
             "    if ($isJunction) {",
             "        [IO.Directory]::Delete($junctionPath)",
