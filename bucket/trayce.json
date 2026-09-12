@@ -16,6 +16,24 @@
             "Trayce"
         ]
     ],
+    "post_install": [
+        "$junctionPath = \"$env:LOCALAPPDATA\\unieditdept\\trayce\"",
+        "$persistBackups = \"$persist_dir\\backups\"",
+        "if (!(Test-Path $junctionPath)) {",
+        "    New-Item $persistBackups -ItemType Directory -Force | Out-Null",
+        "    New-Item $junctionPath -ItemType Junction -Value $persistBackups | Out-Null",
+        "}"
+    ],
+    "uninstaller": {
+        "script": [
+            "$junctionPath = \"$env:LOCALAPPDATA\\unieditdept\\trayce\"",
+            "$webviewCache = \"$env:APPDATA\\unieditdept\\trayce\"",
+            "if ($cmd -eq 'uninstall') {",
+            "    if ((Test-Path $junctionPath) -and ((Get-Item $junctionPath -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)) { [IO.Directory]::Delete($junctionPath) }",
+            "    Remove-Item $webviewCache -Recurse -Force -ErrorAction SilentlyContinue",
+            "}"
+        ]
+    },
     "checkver": {
         "url": "https://api.github.com/repos/KaiZhou554/trayce/releases/latest",
         "regex": "download/v([\\d.]+)/trayce-v(\\d+)\\.exe"
