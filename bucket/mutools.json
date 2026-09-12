@@ -16,7 +16,12 @@
         ]
     ],
     "uninstaller": {
-        "script": "if ($cmd -eq 'uninstall') { Remove-Item \"$env:LOCALAPPDATA\\com.pipicat613.mutools\" -Recurse -Force -ErrorAction SilentlyContinue }"
+        "script": [
+            "if ($cmd -eq 'uninstall') {",
+            "    $webviewCache = \"$env:LOCALAPPDATA\\com.pipicat613.mutools\"",
+            "    Remove-Item $webviewCache -Recurse -Force -ErrorAction SilentlyContinue",
+            "}"
+        ]
     },
     "checkver": {
         "url": "https://api.github.com/repos/pipicat613/MuToolsProject/releases/latest",
