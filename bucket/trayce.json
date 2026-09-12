@@ -29,7 +29,10 @@
             "$junctionPath = \"$env:LOCALAPPDATA\\unieditdept\\trayce\"",
             "$webviewCache = \"$env:APPDATA\\unieditdept\\trayce\"",
             "if ($cmd -eq 'uninstall') {",
-            "    if ((Test-Path $junctionPath) -and ((Get-Item $junctionPath -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)) { [IO.Directory]::Delete($junctionPath) }",
+            "    $isJunction = (Test-Path $junctionPath) -and ((Get-Item $junctionPath -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)",
+            "    if ($isJunction) {",
+            "        [IO.Directory]::Delete($junctionPath)",
+            "    }",
             "    Remove-Item $webviewCache -Recurse -Force -ErrorAction SilentlyContinue",
             "}"
         ]
