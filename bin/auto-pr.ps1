@@ -1,6 +1,6 @@
 param(
     # overwrite upstream param
-    [String]$upstream = "Lyaiya/ScoopAris:main"
+    [String]$upstream = "Lyaiya/scoop-aris:master"
 )
 
 if (!$env:SCOOP_HOME) { $env:SCOOP_HOME = Convert-Path (scoop prefix scoop) }
