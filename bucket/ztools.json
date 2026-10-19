@@ -1,0 +1,87 @@
+{
+  "version": "3.2.0",
+  "description": "ZTools - An extensible application launcher",
+  "homepage": "https://github.com/ZToolsCenter/ZTools",
+  "license": "MIT",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/ZToolsCenter/ZTools/releases/download/v3.2.0/ZTools-3.2.0-win-x64.zip",
+      "hash": "cfbee38dd75a139903592178baea67b827aa943b20184906d72aee2ae23456d6"
+    }
+  },
+  "shortcuts": [
+    [
+      "ZTools.exe",
+      "ZTools"
+    ]
+  ],
+  "pre_install": [
+    "$legacy_data_dir = \"$env:USERPROFILE\\.ztools\"",
+    "$persist_data_dir = \"$persist_dir\\data\"",
+    "Write-Host ''",
+    "if (Test-Path -LiteralPath $persist_data_dir) {",
+    "    info \"Using existing data at '$persist_data_dir'; skipping migration.\"",
+    "    return",
+    "}",
+    "if (!(Test-Path -LiteralPath $legacy_data_dir -PathType Container)) {",
+    "    info \"No existing ZTools data found at '$legacy_data_dir'; skipping migration.\"",
+    "    return",
+    "}",
+    "info \"Copying ZTools data from '$legacy_data_dir' to '$persist_data_dir'...\"",
+    "New-Item -ItemType Directory -Path $persist_dir -Force -ErrorAction Stop | Out-Null",
+    "Copy-Item -LiteralPath $legacy_data_dir -Destination $persist_data_dir -Recurse -Force -ErrorAction Stop",
+    "info \"ZTools data copied. You may manually delete '$legacy_data_dir'.\""
+  ],
+  "env_set": {
+    "ZTOOLS_DATA_ROOT": "$persist_dir\\data"
+  },
+  "uninstaller": {
+    "script": [
+      "if ($cmd -eq 'uninstall') {",
+      "    Write-Host ''",
+      "    info 'Removing ZTools startup entries...'",
+      "    $keys = @(",
+      "        'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run',",
+      "        'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run'",
+      "    )",
+      "    foreach ($key in $keys) {",
+      "        Remove-ItemProperty -Path $key -Name 'top.z-tools' -ErrorAction SilentlyContinue",
+      "    }",
+      "    info 'ZTools startup entry cleanup finished.'",
+      "    $temp_root = [IO.Path]::GetFullPath([IO.Path]::GetTempPath())",
+      "    $temp_dirs = @('ztools-plugin-download', 'ztools-npm-download', 'ztools-zbrowser')",
+      "    foreach ($name in $temp_dirs) {",
+      "        $temp_path = [IO.Path]::GetFullPath((Join-Path $temp_root $name))",
+      "        if (!(Test-Path -LiteralPath $temp_path -PathType Container)) {",
+      "            continue",
+      "        }",
+      "        info \"Removing temporary directory '$temp_path'...\"",
+      "        try {",
+      "            Remove-Item -LiteralPath $temp_path -Recurse -Force -ErrorAction Stop",
+      "        } catch {",
+      "            warn \"Could not remove '$temp_path': $($_.Exception.Message)\"",
+      "        }",
+      "    }",
+      "    $roaming_data_dir = Join-Path $env:APPDATA 'ZTools'",
+      "    if (Test-Path -LiteralPath $roaming_data_dir -PathType Container) {",
+      "        try {",
+      "            [IO.Directory]::Delete($roaming_data_dir, $false)",
+      "            info \"Removed empty directory '$roaming_data_dir'.\"",
+      "        } catch {",
+      "            warn \"Preserved '$roaming_data_dir': $($_.Exception.Message)\"",
+      "        }",
+      "    }",
+      "}"
+    ]
+  },
+  "checkver": {
+    "github": "https://github.com/ZToolsCenter/ZTools"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/ZToolsCenter/ZTools/releases/download/v$version/ZTools-$version-win-x64.zip"
+      }
+    }
+  }
+}
