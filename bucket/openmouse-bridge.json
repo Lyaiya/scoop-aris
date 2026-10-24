@@ -21,6 +21,7 @@
         ]
     ],
     "pre_install": [
+        "Write-Host ''",
         "$configDir = \"$env:APPDATA\\OpenMouse\\OpenMouse Bridge\\config\"",
         "$persistDataDir = \"$persist_dir\\data\"",
         "New-Item -Path $persistDataDir -ItemType Directory -Force -ErrorAction Stop | Out-Null",
