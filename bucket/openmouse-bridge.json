@@ -44,12 +44,6 @@
         "New-Item -Path $configDir -ItemType Junction -Target $persistDataDir -ErrorAction Stop | Out-Null"
     ],
     "persist": "data",
-    "post_install": [
-        "$runKey = 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'",
-        "if (Get-ItemPropertyValue -Path $runKey -Name 'OpenMouse Bridge' -ErrorAction SilentlyContinue) {",
-        "    Set-ItemProperty -Path $runKey -Name 'OpenMouse Bridge' -Value ('\"{0}\\openmouse-bridge.exe\"' -f $dir) -ErrorAction Stop",
-        "}"
-    ],
     "uninstaller": {
         "script": [
             "if ($cmd -eq 'uninstall') {",
