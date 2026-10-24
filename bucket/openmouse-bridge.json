@@ -43,7 +43,6 @@
         "info \"Creating OpenMouse Bridge configuration junction from '$configDir' to '$persistDataDir'...\"",
         "New-Item -Path $configDir -ItemType Junction -Target $persistDataDir -ErrorAction Stop | Out-Null"
     ],
-    "persist": "data",
     "uninstaller": {
         "script": [
             "if ($cmd -eq 'uninstall') {",
