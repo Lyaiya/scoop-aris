@@ -21,6 +21,7 @@
         ]
     ],
     "pre_install": [
+        "Write-Host ''",
         "$dataDir = \"$env:APPDATA\\MyGo Music\"",
         "New-Item -Path $persist_dir -ItemType Directory -Force -ErrorAction Stop | Out-Null",
         "$existingItem = Get-Item -LiteralPath $dataDir -Force -ErrorAction SilentlyContinue",
