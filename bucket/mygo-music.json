@@ -44,6 +44,7 @@
     "uninstaller": {
         "script": [
             "if ($cmd -eq 'uninstall') {",
+            "    Write-Host ''",
             "    $dataDir = \"$env:APPDATA\\MyGo Music\"",
             "    $existingItem = Get-Item -LiteralPath $dataDir -Force -ErrorAction SilentlyContinue",
             "    if ($existingItem -and ($existingItem.LinkType -eq 'Junction') -and ($existingItem.Target -eq $persist_dir)) {",
