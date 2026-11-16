@@ -7,7 +7,7 @@
     "hash": "df888dc72680eda408f136cd4d371c5d1348fbc350d3a98d178cf11963b0130d",
     "pre_install": [
         "if (!(Test-Path \"$persist_dir\\config.json\")) {",
-        "    New-Item -Path \"$dir\\config.json\" -ItemType File | Out-Null",
+        "    Set-Content -Path \"$dir\\config.json\" -Value '{}' -NoNewline",
         "}"
     ],
     "shortcuts": [
